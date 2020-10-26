@@ -97,12 +97,12 @@ class LabRequestControllerTest {
         assertThat(updatedTestRequest.getStatus(), equalTo(RequestStatus.LAB_TEST_COMPLETED));
 
         // 3. the results of both the objects created should be same. Make use of getLabResult() method to get the results.
-        assertThat(updatedTestRequest.getLabResult().getBloodPressure(), equalTo(getCreateLabResult(testRequest).getBloodPressure()));
-        assertThat(updatedTestRequest.getLabResult().getComments(), equalTo(getCreateLabResult(testRequest).getComments()));
-        assertThat(updatedTestRequest.getLabResult().getHeartBeat(), equalTo(getCreateLabResult(testRequest).getHeartBeat()));
-        assertThat(updatedTestRequest.getLabResult().getOxygenLevel(), equalTo(getCreateLabResult(testRequest).getOxygenLevel()));
-        assertThat(updatedTestRequest.getLabResult().getResult(), equalTo(getCreateLabResult(testRequest).getResult()));
-        assertThat(updatedTestRequest.getLabResult().getTemperature(), equalTo(getCreateLabResult(testRequest).getTemperature()));
+        assertThat(updatedTestRequest.getLabResult().getBloodPressure(), equalTo(labResult.getBloodPressure()));
+        assertThat(updatedTestRequest.getLabResult().getComments(), equalTo(labResult.getComments()));
+        assertThat(updatedTestRequest.getLabResult().getHeartBeat(), equalTo(labResult.getHeartBeat()));
+        assertThat(updatedTestRequest.getLabResult().getOxygenLevel(), equalTo(labResult.getOxygenLevel()));
+        assertThat(updatedTestRequest.getLabResult().getResult(), equalTo(labResult.getResult()));
+        assertThat(updatedTestRequest.getLabResult().getTemperature(), equalTo(labResult.getTemperature()));
 
     }
 

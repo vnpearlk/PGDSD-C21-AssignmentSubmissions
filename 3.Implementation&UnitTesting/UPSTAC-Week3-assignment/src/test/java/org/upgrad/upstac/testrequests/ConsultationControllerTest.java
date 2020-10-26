@@ -95,7 +95,7 @@ class ConsultationControllerTest {
         // 3. the suggestion of both the objects created should be same. Make use of getSuggestion() method to get the results.
         assertThat(updatedTestRequest.getRequestId(), equalTo(testRequest.getRequestId()));
         assertThat(updatedTestRequest.getStatus(), equalTo(RequestStatus.COMPLETED));
-        assertThat(updatedTestRequest.getConsultation().getSuggestion(), equalTo(getCreateConsultationRequest(testRequest).getSuggestion()));
+        assertThat(updatedTestRequest.getConsultation().getSuggestion(), equalTo(consultationRequest.getSuggestion()));
 
     }
 
