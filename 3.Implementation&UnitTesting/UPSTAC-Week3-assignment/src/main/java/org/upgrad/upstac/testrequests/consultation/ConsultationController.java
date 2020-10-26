@@ -8,6 +8,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.upgrad.upstac.config.security.UserLoggedInService;
 import org.upgrad.upstac.exception.AppException;
+import org.upgrad.upstac.testrequests.RequestStatus;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.testrequests.TestRequestQueryService;
 import org.upgrad.upstac.testrequests.TestRequestUpdateService;
@@ -27,8 +28,6 @@ public class ConsultationController {
     Logger log = LoggerFactory.getLogger(ConsultationController.class);
 
 
-
-
     @Autowired
     private TestRequestUpdateService testRequestUpdateService;
 
@@ -37,39 +36,34 @@ public class ConsultationController {
 
 
     @Autowired
-    TestRequestFlowService  testRequestFlowService;
+    TestRequestFlowService testRequestFlowService;
 
     @Autowired
     private UserLoggedInService userLoggedInService;
 
 
-
     @GetMapping("/in-queue")
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    public List<TestRequest> getForConsultations()  {
+    public List<TestRequest> getForConsultations() {
         //Implement this method to get the list of test requests having status as 'LAB_TEST_COMPLETED'
         // make use of the findBy() method from testRequestQueryService class
         //return the result
         // For reference check the method requestHistory() method from TestRequestController class
-        return null; // replace this line with your code
 
+        return testRequestQueryService.findBy(RequestStatus.LAB_TEST_COMPLETED);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('DOCTOR')")
-    public List<TestRequest> getForDoctor()  {
+    public List<TestRequest> getForDoctor() {
 
         // Create an object of User class and store the current logged in user first
         //Implement this method to return the list of test requests assigned to current doctor(make use of the above created User object)
         //Make use of the findByDoctor() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
 
-        return null; // replace this line with your code
-
-
-
+        return testRequestQueryService.findByDoctor(userLoggedInService.getLoggedInUser());
     }
-
 
 
     @PreAuthorize("hasAnyRole('DOCTOR')")
@@ -81,32 +75,29 @@ public class ConsultationController {
         // return the above created object
         // Refer to the method createRequest() from the TestRequestController class
         try {
-            return null; // replace this line of code with your implementation
-        }catch (AppException e) {
+            return testRequestUpdateService.assignForConsultation(id, userLoggedInService.getLoggedInUser());
+        } catch (AppException e) {
             throw asBadRequest(e.getMessage());
         }
     }
 
 
-
     @PreAuthorize("hasAnyRole('DOCTOR')")
     @PutMapping("/update/{id}")
-    public TestRequest updateConsultation(@PathVariable Long id,@RequestBody CreateConsultationRequest testResult) {
+    public TestRequest updateConsultation(@PathVariable Long id, @RequestBody CreateConsultationRequest testResult) {
         // Implement this method to update the result of the current test request id with test doctor comments
         // Create an object of the User class to get the logged in user
         // Create an object of TestResult class and make use of updateConsultation() method from testRequestUpdateService class
         //to update the current test request id with the testResult details by the current user(object created)
 
         try {
-            return null; // replace this line of code with your implementation
-
+            return testRequestUpdateService.updateConsultation(id, testResult, userLoggedInService.getLoggedInUser());
         } catch (ConstraintViolationException e) {
             throw asConstraintViolation(e);
-        }catch (AppException e) {
+        } catch (AppException e) {
             throw asBadRequest(e.getMessage());
         }
     }
-
 
 
 }

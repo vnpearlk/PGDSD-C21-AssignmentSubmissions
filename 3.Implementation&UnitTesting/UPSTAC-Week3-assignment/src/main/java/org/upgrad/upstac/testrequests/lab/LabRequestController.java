@@ -8,11 +8,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.upgrad.upstac.config.security.UserLoggedInService;
 import org.upgrad.upstac.exception.AppException;
+import org.upgrad.upstac.testrequests.RequestStatus;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.testrequests.TestRequestQueryService;
 import org.upgrad.upstac.testrequests.TestRequestUpdateService;
 import org.upgrad.upstac.testrequests.flow.TestRequestFlowService;
-import org.upgrad.upstac.users.User;
 
 import javax.validation.ConstraintViolationException;
 import java.util.List;
@@ -28,8 +28,6 @@ public class LabRequestController {
     Logger log = LoggerFactory.getLogger(LabRequestController.class);
 
 
-
-
     @Autowired
     private TestRequestUpdateService testRequestUpdateService;
 
@@ -39,35 +37,31 @@ public class LabRequestController {
     private TestRequestFlowService testRequestFlowService;
 
 
-
     @Autowired
     private UserLoggedInService userLoggedInService;
 
 
-
     @GetMapping("/to-be-tested")
     @PreAuthorize("hasAnyRole('TESTER')")
-    public List<TestRequest> getForTests()  {
+    public List<TestRequest> getForTests() {
 
         //Implement this method to return the list of test requests having status as 'INITIATED'
         //Make use of the findBy() method from testRequestQueryService class to get the list
         // For reference check the method requestHistory() method from TestRequestController class
-            return null; // replace this line with your code
 
+        return testRequestQueryService.findBy(RequestStatus.INITIATED);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyRole('TESTER')")
-    public List<TestRequest> getForTester()  {
+    public List<TestRequest> getForTester() {
 
         // Create an object of User class and store the current logged in user first
         //Implement this method to return the list of test requests assigned to current tester(make use of the above created User object)
         //Make use of the findByTester() method from testRequestQueryService class to get the list
         // For reference check the method getPendingTests() method from TestRequestController class
 
-        return null; // replace this line with your code
-
-
+        return testRequestQueryService.findByTester(userLoggedInService.getLoggedInUser());
     }
 
 
@@ -82,35 +76,28 @@ public class LabRequestController {
         // Refer to the method createRequest() from the TestRequestController class
 
         try {
-
-            return null; // replace this line of code with your implementation
-
-
-        }catch (AppException e) {
+            return testRequestUpdateService.assignForLabTest(id, userLoggedInService.getLoggedInUser());
+        } catch (AppException e) {
             throw asBadRequest(e.getMessage());
         }
     }
 
     @PreAuthorize("hasAnyRole('TESTER')")
     @PutMapping("/update/{id}")
-    public TestRequest updateLabTest(@PathVariable Long id,@RequestBody CreateLabResult createLabResult) {
+    public TestRequest updateLabTest(@PathVariable Long id, @RequestBody CreateLabResult createLabResult) {
 
         // Implement this method to update the result of the current test request id with test results
         // Create an object of the User class to get the logged in user
         // Create an object of TestResult class and make use of updateLabTest() method from testRequestUpdateService class
         //to update the current test request id with the createLabResult details by the current user(object created)
         try {
-            return null; // replace this line of code with your implementation
-
+            return testRequestUpdateService.updateLabTest(id, createLabResult, userLoggedInService.getLoggedInUser());
         } catch (ConstraintViolationException e) {
             throw asConstraintViolation(e);
-        }catch (AppException e) {
+        } catch (AppException e) {
             throw asBadRequest(e.getMessage());
         }
     }
-
-
-
 
 
 }

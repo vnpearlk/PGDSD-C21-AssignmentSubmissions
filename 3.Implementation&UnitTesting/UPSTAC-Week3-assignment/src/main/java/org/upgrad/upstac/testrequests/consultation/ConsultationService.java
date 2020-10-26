@@ -9,6 +9,7 @@ import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.users.User;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 
 @Service
 @Validated
@@ -21,22 +22,29 @@ public class ConsultationService {
 
 
     @Transactional
-    public Consultation assignForConsultation( TestRequest testRequest, User doctor) {
+    public Consultation assignForConsultation(TestRequest testRequest, User doctor) {
         //Implement this method to assign the consultation service
         // create object of Consultation class and use the setter methods to set doctor and testRequest details
         // make use of save() method of consultationRepository to return the Consultation object
-        return null; // replace this line with your code
 
+        Consultation consultation = new Consultation();
+        consultation.setDoctor(doctor);
+        consultation.setRequest(testRequest);
 
+        return consultationRepository.save(consultation);
     }
 
-    public Consultation updateConsultation(TestRequest testRequest , CreateConsultationRequest createConsultationRequest) {
+    public Consultation updateConsultation(TestRequest testRequest, CreateConsultationRequest createConsultationRequest) {
         //Implement this method to update the consultation
         // create an object of Consultation and make use of setters to set Suggestion, Comments, and UpdatedOn values
         // make use of save() method of consultationRepository to return the Consultation object
-        return null; // replace this line with your code
 
+        Consultation consultation = testRequest.getConsultation();
+        consultation.setSuggestion(createConsultationRequest.getSuggestion());
+        consultation.setComments(createConsultationRequest.getComments());
+        consultation.setUpdatedOn(LocalDate.now());
 
+        return consultationRepository.save(consultation);
     }
 
 
