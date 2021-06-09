@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.upgrad.upstac.exception.AppException;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.users.User;
 
@@ -56,7 +57,10 @@ public class LabResultService {
         // HeartBeat, OxygenLevel, Temperature, Result and UpdatedOn values
         // make use of the saveLabResult() method to return the object of LabResult
 
-        LabResult labResult = testRequest.getLabResult();
+        //LabResult labResult = testRequest.getLabResult(); // My Original Approach; tested & verified
+
+        // Instructor recommended approach - makes sense, as the object is retrieved from repository
+        LabResult labResult = labResultRepository.findByRequest(testRequest).orElseThrow(()-> new AppException("Invalid ID or State"));
         labResult.setBloodPressure(createLabResult.getBloodPressure());
         labResult.setComments(createLabResult.getComments());
         labResult.setHeartBeat(createLabResult.getHeartBeat());

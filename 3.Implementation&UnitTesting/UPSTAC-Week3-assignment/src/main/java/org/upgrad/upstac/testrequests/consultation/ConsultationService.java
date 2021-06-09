@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
+import org.upgrad.upstac.exception.AppException;
 import org.upgrad.upstac.testrequests.TestRequest;
 import org.upgrad.upstac.users.User;
 
@@ -39,7 +40,10 @@ public class ConsultationService {
         // create an object of Consultation and make use of setters to set Suggestion, Comments, and UpdatedOn values
         // make use of save() method of consultationRepository to return the Consultation object
 
-        Consultation consultation = testRequest.getConsultation();
+        // Consultation consultation = testRequest.getConsultation(); // My Original Approach; tested & verified
+        //
+        // Instructor recommended approach - makes sense, as the object is retrieved from repository, yet shall be changed based on Business Logic.
+        Consultation consultation = consultationRepository.findByRequest(testRequest).orElseThrow(()-> new AppException("Invalid ID or State"));
         consultation.setSuggestion(createConsultationRequest.getSuggestion());
         consultation.setComments(createConsultationRequest.getComments());
         consultation.setUpdatedOn(LocalDate.now());
